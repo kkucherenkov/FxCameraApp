@@ -2,6 +2,14 @@ package com.af.experiments.FxCameraApp.shaders;
 
 public class GlSepiaShader extends GlShader {
 
+
+    protected String mShaderName = "sepia";
+
+    @Override
+    public String getName() {
+        return mShaderName;
+    }
+
     private static final String FRAGMENT_SHADER =
             "precision mediump float;" +
                     "varying vec2 vTextureCoord;" +

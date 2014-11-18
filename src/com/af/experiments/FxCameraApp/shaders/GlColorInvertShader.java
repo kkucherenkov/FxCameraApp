@@ -15,4 +15,11 @@ public class GlColorInvertShader extends GlShader {
         super(DEFAULT_VERTEX_SHADER, FRAGMENT_SHADER);
     }
 
+    protected String mShaderName = "invert";
+
+    @Override
+    public String getName() {
+        return mShaderName;
+    }
+
 }

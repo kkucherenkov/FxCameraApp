@@ -12,6 +12,11 @@ public class GlShader {
     public static final String DEFAULT_ATTRIB_POSITION = "aPosition";
     public static final String DEFAULT_ATTRIB_TEXTURE_COORDINATE = "aTextureCoord";
     public static final String DEFAULT_UNIFORM_SAMPLER = "sTexture";
+    protected String mShaderName = "default";
+
+    public String getName() {
+        return mShaderName;
+    }
 
     protected static final String DEFAULT_VERTEX_SHADER =
             "attribute vec4 aPosition;\n" +

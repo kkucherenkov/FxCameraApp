@@ -2,6 +2,13 @@ package com.af.experiments.FxCameraApp.shaders;
 
 public class GlSobelEdgeDetectionShader extends GlShaderGroup {
 
+    protected String mShaderName = "edges";
+
+    @Override
+    public String getName() {
+        return mShaderName;
+    }
+
     private static final String FRAGMENT_SHADER =
             "precision mediump float;\n" +
 

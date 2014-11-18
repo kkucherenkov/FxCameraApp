@@ -1,16 +1,20 @@
 package com.af.experiments.FxCameraApp.shaders;
 
-import static android.opengl.GLES20.glUniform3fv;
-
 public class GlFalseColorShader extends GlShader {
+
+    protected String mShaderName = "IR filter";
+
+    @Override
+    public String getName() {
+        return mShaderName;
+    }
     private static final String FRAGMENT_SHADER =
             "precision lowp float;" +
 
                     "varying vec2 vTextureCoord;" +
                     "uniform lowp sampler2D sTexture;" +
-                    "uniform vec3 firstColor;" +
-                    "uniform vec3 secondColor;" +
-
+                    "const mediump vec4 firstColor = vec4(0.0, 0.0, 0.5, 1.0);" +
+                    "const mediump vec4 secondColor = vec4(1.0, 0.0, 0.0, 1.0);" +
                     "const mediump vec3 luminanceWeighting = vec3(0.2125, 0.7154, 0.0721);" +
 
                     "void main() {" +
@@ -44,7 +48,7 @@ public class GlFalseColorShader extends GlShader {
 
     @Override
     public void onDraw() {
-        glUniform3fv(getHandle("firstColor"), 0, mFirstColor, 0);
-        glUniform3fv(getHandle("secondColor"), 0, mSecondColor, 0);
+        //glUniform4fv(getHandle("firstColor"), 0, mFirstColor, 0);
+        //glUniform4fv(getHandle("secondColor"), 0, mSecondColor, 0);
     }
 }

@@ -6,6 +6,13 @@ import static android.opengl.GLES20.glUniform2f;
 
 public class GlGlassSphereShader extends GlShader {
 
+    protected String mShaderName = "fish eye";
+
+    @Override
+    public String getName() {
+        return mShaderName;
+    }
+
     private static final String FRAGMENT_SHADER =
             "precision mediump float;" +
 
