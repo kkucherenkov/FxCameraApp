@@ -2,6 +2,7 @@ package com.af.experiments.FxCameraApp.View;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -12,13 +13,12 @@ import android.util.Log;
 import com.af.experiments.FxCameraApp.Utils.Fps;
 import com.af.experiments.FxCameraApp.Utils.OpenGlUtils;
 import com.af.experiments.FxCameraApp.camera.CameraHelper;
-import com.af.experiments.FxCameraApp.ogles.GLES20ConfigChooser;
-import com.af.experiments.FxCameraApp.ogles.GLES20ContextFactory;
-import com.af.experiments.FxCameraApp.ogles.GlPreviewTextureFactory;
-import com.af.experiments.FxCameraApp.ogles.Texture;
+import com.af.experiments.FxCameraApp.ogles.*;
 import com.af.experiments.FxCameraApp.renderer.GLES20FramebufferObject;
 import com.af.experiments.FxCameraApp.renderer.GlFrameBufferObjectRenderer;
-import com.af.experiments.FxCameraApp.shaders.*;
+import com.af.experiments.FxCameraApp.shaders.GlPreviewShader;
+import com.af.experiments.FxCameraApp.shaders.GlShader;
+import com.af.experiments.FxCameraApp.shaders.fx.GlLutShader;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import java.io.IOException;
@@ -59,7 +59,10 @@ public class GlPreview  extends GLSurfaceView implements CameraView.Preview, Cam
         mFaceMirror = mirror;
     }
 
+    private GlShader mShader;
+
     public void setShader(final GlShader shader) {
+        mShader = shader;
         queueEvent(new Runnable() {
             @Override
             public void run() {
@@ -185,14 +188,20 @@ public class GlPreview  extends GLSurfaceView implements CameraView.Preview, Cam
     @Override
     public void onPictureTaken(final byte[] data, final Camera camera) {
         mCameraHelper.stopPreview();
-
-        queueEvent(new Runnable() {
-            @Override
-            public void run() {
-                mRenderer.capture();
-            }
-        });
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        Renderer finalRenderer = new Renderer();
+        if (mShader instanceof GlLutShader) {
+            //((GlLutShader) mShader).reset();
+        }
+        finalRenderer.setShader(mShader);
+        PixelBuffer buffer = new PixelBuffer(bitmap.getWidth(), bitmap.getHeight());
+        buffer.setRenderer(finalRenderer);
+        finalRenderer.setTexture(new GlImageBitmapTexture(bitmap, false));
+        bitmap = buffer.getBitmap();
+        buffer.destroy();
+        onImageCapture(bitmap);
     }
+
 
     public void capture(final CameraView.CaptureCallback callback) {
         mCaptureCallback = callback;
@@ -242,6 +251,7 @@ public class GlPreview  extends GLSurfaceView implements CameraView.Preview, Cam
         int mMaxTextureSize;
 
         public Renderer() {
+            super();
             Matrix.setIdentityM(mSTMatrix, 0);
         }
 

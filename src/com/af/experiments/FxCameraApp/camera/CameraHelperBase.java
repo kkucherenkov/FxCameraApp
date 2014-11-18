@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -130,7 +131,7 @@ class CameraHelperBase implements CameraHelper, Camera.PictureCallback {
                 width = pictureSize.width;
                 height = pictureSize.height;
             }
-            final Camera.Size previewSize = getOptimalSize(supportedPreviewSizes, measureWidth, measureHeight, maxSize);
+            final Camera.Size previewSize = supportedPreviewSizes.get(0); //getOptimalSize(supportedPreviewSizes, measureWidth, measureHeight, maxSize);
 
             if (previewSize != null && pictureSize != null) {
                 final Camera.Parameters parameters = getCamera().getParameters();
@@ -138,7 +139,9 @@ class CameraHelperBase implements CameraHelper, Camera.PictureCallback {
                 parameters.setPictureSize(pictureSize.width, pictureSize.height);
                 try {
                     getCamera().setParameters(parameters);
-                } catch (final RuntimeException e) {}
+                } catch (final RuntimeException e) {
+                    Log.d("Camera", " errror!", e);
+                }
             }
         }
     }
